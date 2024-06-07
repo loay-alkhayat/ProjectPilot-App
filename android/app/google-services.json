@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945576450571",
+    "project_id": "projectpilot-57f84",
+    "storage_bucket": "projectpilot-57f84.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945576450571:android:3563480d8f0672aec9c50e",
+        "android_client_info": {
+          "package_name": "com.example.projectpilot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX8RZE8inyWaszqTFFOXroWGhLZ4RhMwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
