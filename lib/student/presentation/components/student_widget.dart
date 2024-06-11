@@ -77,8 +77,8 @@ class StudentWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                               color: AppColors.secondary,
                               borderRadius: BorderRadius.circular(3.w)),
-                          width: 18.w,
-                          height: 4.h,
+                          width: 20.w,
+                          height: 5.h,
                           child: TextButton(
                               onPressed: onPress,
                               child: const Text(

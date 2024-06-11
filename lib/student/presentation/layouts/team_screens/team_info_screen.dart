@@ -21,7 +21,6 @@ class TeamInfoScreen extends StatelessWidget {
   String? teamMembersName;
   String? teamMembersImage;
   String teamProposal = 'No Proposal';
-  double _verticalPadding = 10.0; // Initial padding value
 
   TeamInfoScreen({super.key, required this.teamName});
 
@@ -45,11 +44,8 @@ class TeamInfoScreen extends StatelessWidget {
         builder: (context, state) {
           return ConditionalBuilder(
             condition: cubit.getTeamsByIdSuccess,
-            builder: (context) => AnimatedPadding(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.bounceIn,
-              padding: EdgeInsets.symmetric(
-                  horizontal: 5.w, vertical: _verticalPadding),
+            builder: (context) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
