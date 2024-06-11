@@ -32,12 +32,14 @@ class GetStudentTaskskData extends Equatable {
 class GetStudentTasksDetails extends Equatable {
   final String description;
   final String title;
+  final String estimatedTime;
   final int daysLeft;
   final int progress;
   final int taskID;
 
   const GetStudentTasksDetails({
     required this.description,
+    required this.estimatedTime,
     required this.title,
     required this.progress,
     required this.taskID,
@@ -45,5 +47,6 @@ class GetStudentTasksDetails extends Equatable {
   });
 
   @override
-  List<Object?> get props => [progress, title, description, taskID, daysLeft];
+  List<Object?> get props =>
+      [progress, title, estimatedTime, description, taskID, daysLeft];
 }

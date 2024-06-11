@@ -16,4 +16,8 @@ class pngPaths {
   static const String communicationImageOnBoarding =
       '$pngPath/communication.png';
   static const String tasksImageOnBoarding = '$pngPath/tasks.png';
+  static const String sliderImage = '$pngPath/slider.png';
+  static const String sliderImage1 = '$pngPath/slider1.png';
+  static const String sliderImage2 = '$pngPath/slider2.png';
+  static const String sliderImage3 = '$pngPath/slider3.png';
 }

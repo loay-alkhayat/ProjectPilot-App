@@ -512,7 +512,7 @@ class SupervisorsScreen extends StatelessWidget {
                                                         .getStudentEntity!
                                                         .data
                                                         .student[index]
-                                                        .userType),
+                                                        .major),
                                               ),
                                           itemCount: cubit.getStudentEntity!
                                               .data.student.length)

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class EngineerEntity extends Equatable {
   final String status;
-  final int pages;
+  final String pages;
   final EngineerData data;
 
   const EngineerEntity(

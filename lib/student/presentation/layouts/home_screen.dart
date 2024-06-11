@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectpilot/core/assets_paths/app_png_paths.dart';
 import 'package:projectpilot/core/functions/functions.dart';
 import 'package:projectpilot/core/usecase/base_usecase.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
@@ -19,10 +20,10 @@ class HomeScreen extends StatelessWidget {
   bool press = false;
   int sliderIndex = 0;
   List<String> imageList = [
-    "https://img.freepik.com/free-photo/graduation-high-school-university-concept-space-text_185193-110169.jpg?w=1380&t=st=1711203721~exp=1711204321~hmac=404b423eb9e9cd4ef98583214ea65cc9e0ca5ee3b066a87fa4f35db238c5c28b",
-    "https://img.freepik.com/free-photo/graduation-high-school-university-concept-space-text_185193-110169.jpg?w=1380&t=st=1711203721~exp=1711204321~hmac=404b423eb9e9cd4ef98583214ea65cc9e0ca5ee3b066a87fa4f35db238c5c28b",
-    "https://img.freepik.com/free-photo/graduation-high-school-university-concept-space-text_185193-110169.jpg?w=1380&t=st=1711203721~exp=1711204321~hmac=404b423eb9e9cd4ef98583214ea65cc9e0ca5ee3b066a87fa4f35db238c5c28b",
-    "https://img.freepik.com/free-photo/graduation-high-school-university-concept-space-text_185193-110169.jpg?w=1380&t=st=1711203721~exp=1711204321~hmac=404b423eb9e9cd4ef98583214ea65cc9e0ca5ee3b066a87fa4f35db238c5c28b",
+    pngPaths.sliderImage,
+    pngPaths.sliderImage1,
+    pngPaths.sliderImage2,
+    pngPaths.sliderImage3,
   ];
 
   @override
@@ -88,30 +89,19 @@ class HomeScreen extends StatelessWidget {
                       height: 25.h,
                       autoPlayCurve: Curves.linear,
                       autoPlay: true,
-                      animateToClosest: true,
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       onPageChanged: (index, reason) {
                         setState(() {
                           sliderIndex = index;
                         });
                       },
-                      // Additional animation properties
-                      enlargeCenterPage: false,
-                      // Enable center item to be larger
-                      viewportFraction: 0.8,
-                      // Fraction of the viewport occupied by each item
+                      enlargeCenterPage: true,
+                      viewportFraction: 0.9,
                       aspectRatio: 16 / 9,
-                      // Aspect ratio of each item
                       scrollDirection: Axis.horizontal,
-                      // Scroll direction
-                      // Add more animation properties here
                       enableInfiniteScroll: true,
-                      // Enable infinite scrolling
                       reverse: false,
-                      // Reverse the order of items
-                      scrollPhysics:
-                          const BouncingScrollPhysics(), // Apply bouncing scroll physics
-                      // You can customize more animation properties as per your requirement
+                      scrollPhysics: const BouncingScrollPhysics(),
                     ),
                     items: imageList.map((imageUrl) {
                       return Builder(
@@ -125,7 +115,7 @@ class HomeScreen extends StatelessWidget {
                             child: ClipRRect(
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
+                              child: Image.asset(
                                 imageUrl,
                                 fit:
                                     BoxFit.cover, // Adjust the BoxFit as needed
