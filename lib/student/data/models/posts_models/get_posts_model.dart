@@ -24,6 +24,7 @@ class GetPostsDataModel extends GetPostsDataEntity {
       {required super.postID,
       required super.postCommentsCount,
       required super.post,
+      required super.userType,
       required super.isLiked,
       required super.postLikesCount,
       required super.postStudentName});
@@ -34,6 +35,7 @@ class GetPostsDataModel extends GetPostsDataEntity {
       postStudentName: json['user_name'],
       postLikesCount: json['likeCount'],
       isLiked: json['isLiked'],
+      userType: json['user_type'],
       post: json['post'],
       postID: json['id'],
     );

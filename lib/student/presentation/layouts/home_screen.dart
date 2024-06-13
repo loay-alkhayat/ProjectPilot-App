@@ -163,48 +163,39 @@ class HomeScreen extends StatelessWidget {
               builder: (context, state) {
                 return ConditionalBuilder(
                   condition: cubit.getBlogsSuccess,
-                  builder: (context) => StatefulBuilder(
-                    builder: (context, setState) => Expanded(
-                      child: ListView.separated(
-                              padding: EdgeInsets.only(bottom: 4.h),
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) => InkWell(
-                                    borderRadius: BorderRadius.circular(4.w),
-                                    onTap: () => setState(() {
-                                      press = !press;
-                                    }),
-                                    child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      curve: Curves.linear,
-                                      child: BlogWidget(
-                                        blogText: cubit.getBlogsEntity!.data
-                                            .blogs[index].content,
-                                        mainText: cubit.getBlogsEntity!.data
-                                            .blogs[index].title,
-                                      ),
-                                    ),
-                                  ),
-                              separatorBuilder: (context, index) => Divider(
-                                    height: 2.h,
-                                  ),
-                              itemCount:
-                                  cubit.getBlogsEntity!.data.blogs.length)
-                          .animate()
-                          .slideY(
-                            begin: 1,
-                            end: 0,
-                            curve: const FlippedCurve(Curves.linear),
-                            delay: const Duration(microseconds: 7000),
-                          ),
-                    ),
+                  builder: (context) => Expanded(
+                    child: ListView.separated(
+                      padding: EdgeInsets.only(bottom: 4.h),
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.linear,
+                        child: BlogWidget(
+                          blogDate:
+                              cubit.getBlogsEntity!.data.blogs[index].date,
+                          blogText:
+                              cubit.getBlogsEntity!.data.blogs[index].content,
+                          mainText:
+                              cubit.getBlogsEntity!.data.blogs[index].title,
+                        ),
+                      ),
+                      separatorBuilder: (context, index) => Divider(
+                        height: 2.h,
+                      ),
+                      itemCount: cubit.getBlogsEntity!.data.blogs.length,
+                    ).animate().slideY(
+                          begin: 1,
+                          end: 0,
+                          curve: const FlippedCurve(Curves.linear),
+                          delay: const Duration(microseconds: 7000),
+                        ),
                   ),
                   fallback: (context) => const Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
               },
-            )
+            ),
           ],
         ),
       ),

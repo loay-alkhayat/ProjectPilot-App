@@ -20,6 +20,7 @@ class GetPostsDataEntity extends Equatable {
   final int postID;
   final String post;
   final String postStudentName;
+  final String userType;
   final bool isLiked;
   final int postLikesCount;
   final int postCommentsCount;
@@ -27,6 +28,7 @@ class GetPostsDataEntity extends Equatable {
   const GetPostsDataEntity(
       {required this.postID,
       required this.post,
+      required this.userType,
       required this.postLikesCount,
       required this.postCommentsCount,
       required this.isLiked,
@@ -37,6 +39,7 @@ class GetPostsDataEntity extends Equatable {
         postID,
         postLikesCount,
         isLiked,
+        userType,
         postCommentsCount,
         post,
         postStudentName
