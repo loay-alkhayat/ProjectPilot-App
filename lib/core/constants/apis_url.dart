@@ -2,6 +2,8 @@ class ApiUrls {
   // TODO : CHANGE BASE URL TO YOUR BASE URL HERE
   static const String baseUrl = 'http://192.168.1.110:8000/api';
 
+  // static const String baseUrl = 'http://192.168.1.4:8000/api';
+
   // TODO : ADD YOUR APIS ENDPOINTS HERE
   static const String addBio = '$baseUrl/addBio';
   static const String login = '$baseUrl/login';

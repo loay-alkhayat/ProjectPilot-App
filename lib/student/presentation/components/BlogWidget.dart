@@ -8,11 +8,13 @@ class BlogWidget extends StatefulWidget {
   final String mainText;
   final String blogText;
   final String? blogImage;
+  final String? blogDate;
 
   const BlogWidget({
     super.key,
     required this.mainText,
     required this.blogText,
+    required this.blogDate,
     this.blogImage,
   });
 
@@ -30,8 +32,8 @@ class _BlogWidgetState extends State<BlogWidget> {
       borderRadius: BorderRadius.circular(4.w),
       onTap: () {
         setState(() {
-          pressExpand == true ? maxLines = 8 : maxLines = 2;
           pressExpand = !pressExpand;
+          pressExpand == true ? maxLines = 25 : maxLines = 2;
         });
       },
       child: Row(
@@ -54,7 +56,7 @@ class _BlogWidgetState extends State<BlogWidget> {
                       TextStyle(fontWeight: FontWeight.w500, fontSize: 17.sp),
                 ),
                 Text(
-                  "25-5-2024", // Adding the date here
+                  widget.blogDate!, // Adding the date here
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: AppColors.grey,
@@ -76,7 +78,7 @@ class _BlogWidgetState extends State<BlogWidget> {
                     ),
                   ),
                 ),
-                maxLines == 2 && widget.blogText.characters.length > 60
+                maxLines == 2 && widget.blogText.characters.length > 95
                     ? Align(
                         alignment: Alignment.centerRight,
                         child: Text(

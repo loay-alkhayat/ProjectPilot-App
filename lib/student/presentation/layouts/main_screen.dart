@@ -79,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context, state) => Form(
         key: formKey,
         child: Scaffold(
-          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomInset: false,
           key: scaffoldKey,
           body: PageView.builder(
             scrollBehavior: const ScrollBehavior(),

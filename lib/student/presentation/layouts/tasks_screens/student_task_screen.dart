@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectpilot/core/assets_paths/app_png_paths.dart';
 import 'package:projectpilot/student/domain/parameters/tasks_params/complete_sub_task_param.dart';
-import 'package:projectpilot/student/domain/parameters/tasks_params/delete_sub_task_param.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -56,6 +55,8 @@ class StudentTasksScreen extends StatelessWidget {
                           return Padding(
                             padding: EdgeInsets.only(bottom: 2.h),
                             child: TaskCard(
+                              estimatedTime: cubit.getStudentTasksEntity!
+                                  .data[index].studentTasks[0].estimatedTime,
                               subTaskID: cubit.getStudentTasksEntity!
                                   .data[index].studentTasks[0].taskID,
                               completed: cubit.getStudentTasksEntity!
@@ -109,6 +110,7 @@ class TaskCard extends StatelessWidget {
   final int daysLeft;
   final int completed;
   final int subTaskID;
+  final String estimatedTime;
 
   const TaskCard({
     super.key,
@@ -118,6 +120,7 @@ class TaskCard extends StatelessWidget {
     required this.description,
     required this.daysLeft,
     required this.subTaskID,
+    required this.estimatedTime,
   });
 
   @override
@@ -177,6 +180,22 @@ class TaskCard extends StatelessWidget {
             const Divider(),
             SizedBox(height: 1.h),
             Text(
+              "Estemated Time:",
+              style: TextStyle(fontSize: 15.sp, color: AppColors.grey),
+            ),
+            SizedBox(height: 1.h),
+            Padding(
+              padding: EdgeInsets.only(left: 2.w),
+              child: Text(
+                "$estimatedTime",
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 17.sp,
+                ),
+              ),
+            ),
+            const Divider(),
+            Text(
               "Days Left:",
               style: TextStyle(fontSize: 15.sp, color: AppColors.grey),
             ),
@@ -184,14 +203,14 @@ class TaskCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 2.w),
               child: Text(
-                "$daysLeft",
+                completed == 0 && daysLeft < 0 ? "0" : "$daysLeft",
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 17.sp,
                 ),
               ),
             ),
-            SizedBox(height: 3.h),
+            SizedBox(height: 2.h),
             completed == 1
                 ? Row(
                     children: [
@@ -215,33 +234,46 @@ class TaskCard extends StatelessWidget {
                       ),
                     ],
                   )
-                : Row(
-                    children: [
-                      Expanded(
-                        child: widthButton(
-                          textButton: "Done",
-                          onPress: () {
-                            CompleteSubTaskParameters parameters =
-                                CompleteSubTaskParameters(subTaskID: subTaskID);
-                            MainCubit.get(context).completeSubTask(parameters);
-                          },
-                          paddingSize: 5.w,
-                        ),
+                : completed == 0 && daysLeft < 0
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 4.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2.w),
+                                color: Colors.red[400],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "TimeOut !",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: 17.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: widthButton(
+                              textButton: "Done",
+                              onPress: () {
+                                CompleteSubTaskParameters parameters =
+                                    CompleteSubTaskParameters(
+                                        subTaskID: subTaskID);
+                                MainCubit.get(context)
+                                    .completeSubTask(parameters);
+                              },
+                              paddingSize: 5.w,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 2.w),
-                      Expanded(
-                        child: widthButton(
-                          textButton: "UnDone",
-                          onPress: () {
-                            DeleteSubTaskParameters parameters =
-                                DeleteSubTaskParameters(subTaskID: subTaskID);
-                            MainCubit.get(context).deleteSubTask(parameters);
-                          },
-                          paddingSize: 5.w,
-                        ),
-                      ),
-                    ],
-                  ),
           ],
         ),
       ),

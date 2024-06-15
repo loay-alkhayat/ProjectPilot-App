@@ -39,6 +39,7 @@ class GetStudentTasksDetailsModel extends GetStudentTasksDetails {
       {required super.description,
       required super.title,
       required super.progress,
+      required super.estimatedTime,
       required super.taskID,
       required super.daysLeft});
 
@@ -46,6 +47,7 @@ class GetStudentTasksDetailsModel extends GetStudentTasksDetails {
     return GetStudentTasksDetailsModel(
       daysLeft: json['days_left'],
       description: json['description'],
+      estimatedTime: json['estimated_date'],
       progress: json['completed'],
       title: json['title'],
       taskID: json['id'],

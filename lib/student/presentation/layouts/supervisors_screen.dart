@@ -250,7 +250,9 @@ class SupervisorsScreen extends StatelessWidget {
                                             crossAxisSpacing: 2.w,
                                             childAspectRatio:
                                                 AppConstants.userLeader!
-                                                    ? 1.1.w / 5
+                                                    ? Device.height <= 960
+                                                        ? 1.3.w / 6
+                                                        : 0.165.w
                                                     : 1.4.w / 5,
                                           ),
                                           itemBuilder: (context, index) =>
@@ -273,6 +275,7 @@ class SupervisorsScreen extends StatelessWidget {
                                                     .supervisor[index]
                                                     .userType,
                                                 onPress: () {
+                                                  print(Device.height);
                                                   cubit.indexOfSupervisors =
                                                       index;
                                                   SendInviteToSuperVisorParameters
@@ -354,7 +357,9 @@ class SupervisorsScreen extends StatelessWidget {
                                             crossAxisSpacing: 2.w,
                                             childAspectRatio:
                                                 AppConstants.userLeader!
-                                                    ? 1.1.w / 5
+                                                    ? Device.height <= 960
+                                                        ? 1.3.w / 6
+                                                        : 0.165.w
                                                     : 1.4.w / 5,
                                           ),
                                           itemBuilder: (context, index) {
@@ -459,7 +464,9 @@ class SupervisorsScreen extends StatelessWidget {
                                             childAspectRatio:
                                                 AppConstants.userLeader!
                                                     // 0.8.w
-                                                    ? 1.1.w / 5
+                                                    ? Device.height <= 960
+                                                        ? 1.3.w / 6
+                                                        : 0.165.w
                                                     : 1.4.w / 5,
                                           ),
                                           itemBuilder: (context, index) =>
@@ -512,7 +519,7 @@ class SupervisorsScreen extends StatelessWidget {
                                                         .getStudentEntity!
                                                         .data
                                                         .student[index]
-                                                        .userType),
+                                                        .major),
                                               ),
                                           itemCount: cubit.getStudentEntity!
                                               .data.student.length)
@@ -580,7 +587,9 @@ class SupervisorsScreen extends StatelessWidget {
                                             crossAxisSpacing: 2.w,
                                             childAspectRatio:
                                                 !AppConstants.userLeader!
-                                                    ? 1.1.w / 5
+                                                    ? Device.height <= 960
+                                                        ? 1.3.w / 6
+                                                        : 0.165.w
                                                     : 1.4.w / 5,
                                             // : 1.w / 5,
                                           ),

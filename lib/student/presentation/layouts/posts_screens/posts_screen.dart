@@ -58,6 +58,8 @@ class PostsScreen extends StatelessWidget {
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               return PostCardWidget(
+                                  userType: cubit
+                                      .getPostsEntity!.posts[index].userType,
                                   commentsNumber: cubit.getPostsEntity!
                                       .posts[index].postCommentsCount,
                                   postId:

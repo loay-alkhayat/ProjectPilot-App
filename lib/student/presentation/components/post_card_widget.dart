@@ -22,6 +22,7 @@ class PostCardWidget extends StatefulWidget {
     required this.isLiked,
     required this.likesNumber,
     required this.commentsNumber,
+    required this.userType,
   });
 
   bool isLiked;
@@ -30,6 +31,7 @@ class PostCardWidget extends StatefulWidget {
   int postId;
   String postStudentName;
   String? postText;
+  String? userType;
 
   @override
   State<PostCardWidget> createState() => _PostCardWidgetState();
@@ -71,7 +73,9 @@ class _PostCardWidgetState extends State<PostCardWidget> {
                   radius: 5.w,
                   backgroundColor: AppColors.white,
                   child: Image.asset(
-                    pngPaths.studentProfile,
+                    widget.userType == "student"
+                        ? pngPaths.studentProfile
+                        : pngPaths.professorImage,
                     fit: BoxFit.cover,
                   ),
                 ),
