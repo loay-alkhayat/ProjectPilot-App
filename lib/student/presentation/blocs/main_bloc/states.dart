@@ -417,3 +417,25 @@ class AddBioErrorState extends MainStates {
 
   const AddBioErrorState(this.error);
 }
+
+///SendMessage States
+class SendMessageLoadingState extends MainStates {}
+
+class SendMessageSuccessState extends MainStates {}
+
+class SendMessageErrorState extends MainStates {
+  final String error;
+
+  const SendMessageErrorState(this.error);
+}
+
+///getMessages States
+class GetMessagesLoadingState extends MainStates {}
+
+class GetMessagesSuccessState extends MainStates {}
+
+class GetMessagesErrorState extends MainStates {
+  final String error;
+
+  const GetMessagesErrorState(this.error);
+}

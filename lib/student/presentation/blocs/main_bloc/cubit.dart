@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectpilot/core/services/dio_services.dart';
 import 'package:projectpilot/core/usecase/base_usecase.dart';
@@ -55,6 +56,7 @@ import 'package:projectpilot/student/domain/usecases/team_usecases/get_teams_use
 import 'package:projectpilot/student/domain/usecases/team_usecases/upload_proposal_usecase.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 
+import '../../../../core/models/models/message_model.dart';
 import '../../../domain/entities/Post_entities/creat_Post_entity.dart';
 import '../../../domain/entities/blogs_entity/get_blogs_entity.dart';
 import '../../../domain/entities/invitation_entites/approve_and_reject_student_join_request_entity.dart';
@@ -825,6 +827,41 @@ class MainCubit extends Cubit<MainStates> {
     }, (r) {
       bioEntity = r;
       emit(AddBioSuccessState());
+    });
+  }
+
+  void sendMessage({required String text}) async {
+    emit(SendMessageLoadingState());
+    MessageModel model = MessageModel(
+      DateTime.now().toString(),
+      getStudentInfoEntity!.data.teamID.toString(),
+      getStudentInfoEntity!.data.studentID.toString(),
+      text,
+    );
+    await FirebaseFirestore.instance
+        .collection('teams')
+        .doc(getStudentInfoEntity!.data.teamID.toString())
+        .collection('messages')
+        .add(model.toMap());
+    emit(SendMessageSuccessState());
+  }
+
+  List<MessageModel> messages = [];
+  bool getMessagesSuccess = false;
+  void getMessages() {
+    FirebaseFirestore.instance
+        .collection('teams')
+        .doc(getStudentInfoEntity?.data.teamID.toString())
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      getMessagesSuccess = true;
+      messages = [];
+      for (var element in event.docs) {
+        messages.add(MessageModel.fromJson(element.data()));
+      }
+      emit(GetMessagesSuccessState());
     });
   }
 }

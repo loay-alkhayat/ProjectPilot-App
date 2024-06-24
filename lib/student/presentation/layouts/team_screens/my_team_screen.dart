@@ -15,6 +15,7 @@ import 'package:projectpilot/student/presentation/components/proposal_widget.dar
 import 'package:projectpilot/student/presentation/components/request_card_for_team_widget.dart';
 import 'package:projectpilot/student/presentation/layouts/student_screens/student_info_screen.dart';
 import 'package:projectpilot/student/presentation/layouts/tasks_screens/task_informations_screen.dart';
+import 'package:projectpilot/student/presentation/layouts/team_screens/chat_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../components/member_in_team_widget.dart';
@@ -39,7 +40,11 @@ class MyTeamScreen extends StatelessWidget {
           actions: [
             AppConstants.userTeam != 0
                 ? IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Functions.navigatorPush(
+                          context: context,
+                          screenNameToNavigate: ChatDetailsScreen());
+                    },
                     icon: const Icon(
                       Icons.chat_outlined,
                       color: AppColors.grey,

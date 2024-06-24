@@ -83,7 +83,7 @@ dependencies:
 
 
 
-
+  cloud_firestore: ^5.0.0
   firebase_core: ^3.0.0
   firebase_messaging: ^15.0.0
   flutter_local_notifications: 17.1.2
