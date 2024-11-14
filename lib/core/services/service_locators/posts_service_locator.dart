@@ -30,6 +30,7 @@ import '../../../student/domain/repositories/post_repos/create_post_repo.dart';
 import '../../../student/domain/repositories/post_repos/delete_like_repo.dart';
 import '../../../student/domain/repositories/post_repos/get_post_comments_repo.dart';
 import '../../../student/domain/usecases/post_usecases/create_post_usecase.dart';
+import '../../../student/presentation/layouts/posts_screens/post_actions_cubit/post_actions_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -41,6 +42,15 @@ class PostsServicesLocator {
   factory PostsServicesLocator() => _instance ??= PostsServicesLocator._();
 
   static void init() {
+    sl.registerFactory(() => PostActionsCubit(
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+        ));
+
     /// Use Cases
     sl.registerLazySingleton(() => CreatePostUseCase(sl()));
     sl.registerLazySingleton(() => GetPostsUseCase(sl()));

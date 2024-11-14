@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectpilot/core/constants/app_colors.dart';
 import 'package:projectpilot/core/services/cache_storage_services.dart';
-import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:projectpilot/student/presentation/layouts/auth_screen/login_screen.dart';
 import 'package:projectpilot/student/presentation/layouts/main_screen.dart';
 import 'package:projectpilot/student/presentation/layouts/on_boarding_screen.dart';
@@ -57,25 +56,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => sl<MainCubit>(),
-        )
-      ],
-      child: ResponsiveSizer(
-        builder: (context, orientation, deviceType) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Project Pilot',
-          theme: ThemeData(
-            useMaterial3: true,
-            floatingActionButtonTheme: const FloatingActionButtonThemeData(
-                backgroundColor: AppColors.blue),
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: AppColors.white, primary: AppColors.primary),
-          ),
-          home: initialWidget,
+    return ResponsiveSizer(
+      builder: (context, orientation, deviceType) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Project Pilot',
+        theme: ThemeData(
+          useMaterial3: true,
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: AppColors.blue),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.white, primary: AppColors.primary),
         ),
+        home: initialWidget,
       ),
     );
   }

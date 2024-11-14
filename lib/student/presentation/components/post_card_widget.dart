@@ -9,9 +9,11 @@ import 'package:projectpilot/student/domain/parameters/posts_params/add_comment_
 import 'package:projectpilot/student/domain/parameters/posts_params/add_like_param.dart';
 import 'package:projectpilot/student/domain/parameters/posts_params/delete_like_param.dart';
 import 'package:projectpilot/student/domain/parameters/posts_params/get_post_comments_parameters.dart';
-import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
-import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
+import 'package:projectpilot/student/presentation/layouts/posts_screens/post_actions_cubit/post_actions_cubit.dart';
+import 'package:projectpilot/student/presentation/layouts/posts_screens/post_actions_cubit/post_actions_state.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import '../../../core/services/service_locators/posts_service_locator.dart';
 
 class PostCardWidget extends StatefulWidget {
   PostCardWidget({
@@ -153,14 +155,14 @@ class _PostCardWidgetState extends State<PostCardWidget> {
                         if (!widget.isLiked) {
                           AddLikeParameters parameters =
                               AddLikeParameters(postID: widget.postId);
-                          MainCubit.get(context).addLike(parameters);
+                          PostActionsCubit.get(context).addLike(parameters);
                           setState(() {
                             pressLike = true;
                           });
                         } else {
                           UnLikeParameters parameters =
                               UnLikeParameters(postID: widget.postId);
-                          MainCubit.get(context).unLike(parameters);
+                          PostActionsCubit.get(context).unLike(parameters);
                           setState(() {
                             pressLike = false;
                           });
@@ -199,10 +201,10 @@ class _PostCardWidgetState extends State<PostCardWidget> {
                     radius: 50.w,
                     borderRadius: BorderRadius.circular(2.w),
                     onTap: () {
-                      MainCubit.get(context).postID = widget.postId;
+                      PostActionsCubit.get(context).postID = widget.postId;
                       GetPostCommentsParameters parameters =
                           GetPostCommentsParameters(postID: widget.postId);
-                      MainCubit.get(context).getPostComments(parameters);
+                      PostActionsCubit.get(context).getPostComments(parameters);
                       _showCommentsDialog(context);
                     },
                     child: Row(
@@ -251,118 +253,124 @@ class _PostCardWidgetState extends State<PostCardWidget> {
               child: Column(
                 children: [
                   Expanded(
-                    child: BlocBuilder<MainCubit, MainStates>(
-                      builder: (context, state) {
-                        return ConditionalBuilder(
-                          condition:
-                              MainCubit.get(context).getPostCommentsSuccess &&
-                                  state is! AddCommentLoadingState,
-                          builder: (context) => MainCubit.get(context)
-                                  .getPostCommentsEntity!
-                                  .comments
-                                  .isNotEmpty
-                              ? ListView.separated(
-                                  padding: EdgeInsets.all(2.w),
-                                  itemCount: MainCubit.get(context)
-                                      .getPostCommentsEntity!
-                                      .comments
-                                      .length,
-                                  separatorBuilder: (context, index) =>
-                                      const Divider(),
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 1.h),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 4.w,
-                                            backgroundColor:
-                                                AppColors.lightGrey,
-                                            backgroundImage: AssetImage(
-                                              MainCubit.get(context)
-                                                          .getPostCommentsEntity!
-                                                          .comments[index]
-                                                          .userType ==
-                                                      "student"
-                                                  ? pngPaths.studentProfile
-                                                  : pngPaths.professorImage,
+                    child: BlocProvider(
+                      create: (context) => sl<PostActionsCubit>(),
+                      child: BlocBuilder<PostActionsCubit, PostActionsState>(
+                        builder: (context, state) {
+                          return ConditionalBuilder(
+                            condition: PostActionsCubit.get(context)
+                                    .getPostCommentsSuccess &&
+                                state is! AddCommentLoadingState,
+                            builder: (context) => PostActionsCubit.get(context)
+                                    .getPostCommentsEntity!
+                                    .comments
+                                    .isNotEmpty
+                                ? ListView.separated(
+                                    padding: EdgeInsets.all(2.w),
+                                    itemCount: PostActionsCubit.get(context)
+                                        .getPostCommentsEntity!
+                                        .comments
+                                        .length,
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(),
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 1.h),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 4.w,
+                                              backgroundColor:
+                                                  AppColors.lightGrey,
+                                              backgroundImage: AssetImage(
+                                                PostActionsCubit.get(context)
+                                                            .getPostCommentsEntity!
+                                                            .comments[index]
+                                                            .userType ==
+                                                        "student"
+                                                    ? pngPaths.studentProfile
+                                                    : pngPaths.professorImage,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(width: 2.w),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  MainCubit.get(context)
-                                                      .getPostCommentsEntity!
-                                                      .comments[index]
-                                                      .commentStudentName,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16.sp),
-                                                ),
-                                                SizedBox(height: 0.5.h),
-                                                AnimatedSize(
-                                                  duration: const Duration(
-                                                      microseconds: 500),
-                                                  child: Text(
-                                                    MainCubit.get(context)
+                                            SizedBox(width: 2.w),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    PostActionsCubit.get(
+                                                            context)
                                                         .getPostCommentsEntity!
                                                         .comments[index]
-                                                        .comment,
+                                                        .commentStudentName,
                                                     style: TextStyle(
-                                                        fontSize: 15.sp),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16.sp),
                                                   ),
-                                                ),
-                                              ],
+                                                  SizedBox(height: 0.5.h),
+                                                  AnimatedSize(
+                                                    duration: const Duration(
+                                                        microseconds: 500),
+                                                    child: Text(
+                                                      PostActionsCubit.get(
+                                                              context)
+                                                          .getPostCommentsEntity!
+                                                          .comments[index]
+                                                          .comment,
+                                                      style: TextStyle(
+                                                          fontSize: 15.sp),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            MainCubit.get(context)
-                                                .getPostCommentsEntity!
-                                                .comments[index]
-                                                .commentDate
-                                                .split(" ")
-                                                .first,
-                                            style: const TextStyle(
-                                                color: AppColors.grey),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        pngPaths.nodata,
-                                        height: 40.h,
-                                        width: 70.w,
-                                      ),
-                                      Text(
-                                        "No Comments !",
-                                        style: TextStyle(
-                                            fontSize: 20.sp,
-                                            color: AppColors.grey),
-                                      ),
-                                    ],
+                                            Text(
+                                              PostActionsCubit.get(context)
+                                                  .getPostCommentsEntity!
+                                                  .comments[index]
+                                                  .commentDate
+                                                  .split(" ")
+                                                  .first,
+                                              style: const TextStyle(
+                                                  color: AppColors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : Center(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          pngPaths.nodata,
+                                          height: 40.h,
+                                          width: 70.w,
+                                        ),
+                                        Text(
+                                          "No Comments !",
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color: AppColors.grey),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                          fallback: (context) => const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      },
+                            fallback: (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Padding(
@@ -405,7 +413,8 @@ class _PostCardWidgetState extends State<PostCardWidget> {
                                     AddCommentParameters(
                                         comment: commentController.text,
                                         postID: widget.postId);
-                                MainCubit.get(context).addComment(parameters);
+                                PostActionsCubit.get(context)
+                                    .addComment(parameters);
 
                                 commentController.clear();
                               }

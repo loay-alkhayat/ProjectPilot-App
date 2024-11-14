@@ -72,12 +72,6 @@ class ServicesLocator {
           sl(),
           sl(),
           sl(),
-          sl(),
-          sl(),
-          sl(),
-          sl(),
-          sl(),
-          sl(),
         ));
 
     /// Use Cases

@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectpilot/core/assets_paths/app_png_paths.dart';
 import 'package:projectpilot/student/domain/parameters/posts_params/create_post_param.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
-import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 import 'package:projectpilot/student/presentation/components/width_button.dart';
+import 'package:projectpilot/student/presentation/layouts/posts_screens/post_actions_cubit/post_actions_cubit.dart';
+import 'package:projectpilot/student/presentation/layouts/posts_screens/post_actions_cubit/post_actions_state.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/service_locators/posts_service_locator.dart';
 import '../../../../core/usecase/base_usecase.dart';
 import '../../components/show_toast.dart';
 
@@ -73,34 +75,38 @@ class CreatePostScreen extends StatelessWidget {
                 ),
               ),
             ),
-            BlocConsumer<MainCubit, MainStates>(
-              listener: (context, state) {
-                if (state is CreatePostSuccessState) {
-                  showToast(message: "Post Successfully");
-                  MainCubit.get(context).getPosts(const NoParameters());
-                  Navigator.pop(context);
-                }
-                if (state is CreatePostErrorState) {
-                  showToast(message: state.error);
-                }
-              },
-              builder: (context, state) {
-                return ConditionalBuilder(
-                  condition: state is! CreatePostLoadingState,
-                  builder: (context) => widthButton(
-                    onPress: () {
-                      CreatePostParameters parameters = CreatePostParameters(
-                          postDescription: postController.text);
-                      MainCubit.get(context).createPost(parameters);
-                    },
-                    textButton: "Post Now!",
-                    paddingSize: 0,
-                  ),
-                  fallback: (context) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              },
+            BlocProvider(
+              create: (context) => sl<PostActionsCubit>(),
+              child: BlocConsumer<PostActionsCubit, PostActionsState>(
+                listener: (context, state) {
+                  if (state is CreatePostSuccessState) {
+                    showToast(message: "Post Successfully");
+                    PostActionsCubit.get(context)
+                        .getPosts(const NoParameters());
+                    Navigator.pop(context);
+                  }
+                  if (state is CreatePostErrorState) {
+                    showToast(message: state.error);
+                  }
+                },
+                builder: (context, state) {
+                  return ConditionalBuilder(
+                    condition: state is! CreatePostLoadingState,
+                    builder: (context) => widthButton(
+                      onPress: () {
+                        CreatePostParameters parameters = CreatePostParameters(
+                            postDescription: postController.text);
+                        PostActionsCubit.get(context).createPost(parameters);
+                      },
+                      textButton: "Post Now!",
+                      paddingSize: 0,
+                    ),
+                    fallback: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
