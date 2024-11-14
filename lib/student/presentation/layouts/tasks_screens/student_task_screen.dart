@@ -7,9 +7,11 @@ import 'package:projectpilot/core/assets_paths/app_png_paths.dart';
 import 'package:projectpilot/student/domain/parameters/tasks_params/complete_sub_task_param.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
+import 'package:projectpilot/student/presentation/components/show_toast.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/service_locators/services_locator.dart';
 import '../../../../core/usecase/base_usecase.dart';
 import '../../components/width_button.dart';
 
@@ -19,6 +21,7 @@ class StudentTasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MainCubit cubit = MainCubit.get(context);
+
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
@@ -33,71 +36,77 @@ class StudentTasksScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: BlocConsumer<MainCubit, MainStates>(
-        listener: (context, state) {
-          if (state is CompleteSubTaskSuccessState ||
-              state is DeleteSubTaskSuccessState) {
-            cubit.getStudentTasks(const NoParameters());
-          }
-        },
-        builder: (context, state) {
-          return ConditionalBuilder(
-            condition: state is! GetStudentTasksLoadingState,
-            builder: (context) => cubit.getStudentTasksEntity!.data.isNotEmpty
-                ? Padding(
-                    padding: EdgeInsets.all(4.w),
-                    child: FadeInRight(
-                      duration: Duration(milliseconds: 300),
-                      animate: true,
-                      child: ListView.builder(
-                        itemCount: cubit.getStudentTasksEntity!.data.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: 2.h),
-                            child: TaskCard(
-                              estimatedTime: cubit.getStudentTasksEntity!
-                                  .data[index].studentTasks[0].estimatedTime,
-                              subTaskID: cubit.getStudentTasksEntity!
-                                  .data[index].studentTasks[0].taskID,
-                              completed: cubit.getStudentTasksEntity!
-                                  .data[index].studentTasks[0].progress,
-                              mainTaskTitle: cubit.getStudentTasksEntity!
-                                  .data[index].mainTaskTitle,
-                              title: cubit.getStudentTasksEntity!.data[index]
-                                  .studentTasks[0].title,
-                              description: cubit.getStudentTasksEntity!
-                                  .data[index].studentTasks[0].description,
-                              daysLeft: cubit.getStudentTasksEntity!.data[index]
-                                  .studentTasks[0].daysLeft,
-                            ),
-                          );
-                        },
+      body: BlocProvider(
+        create: (context) => sl<MainCubit>(),
+        child: BlocConsumer<MainCubit, MainStates>(
+          listener: (context, state) {
+            if (state is CompleteSubTaskErrorState) {
+              showToast(message: state.error);
+            }
+            if (state is CompleteSubTaskSuccessState ||
+                state is DeleteSubTaskSuccessState) {
+              cubit.getStudentTasks(const NoParameters());
+            }
+          },
+          builder: (context, state) {
+            return ConditionalBuilder(
+              condition: state is! GetStudentTasksLoadingState,
+              builder: (context) => cubit.getStudentTasksEntity!.data.isNotEmpty
+                  ? Padding(
+                      padding: EdgeInsets.all(4.w),
+                      child: FadeInRight(
+                        duration: Duration(milliseconds: 300),
+                        animate: true,
+                        child: ListView.builder(
+                          itemCount: cubit.getStudentTasksEntity!.data.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 2.h),
+                              child: TaskCard(
+                                estimatedTime: cubit.getStudentTasksEntity!
+                                    .data[index].studentTasks[0].estimatedTime,
+                                subTaskID: cubit.getStudentTasksEntity!
+                                    .data[index].studentTasks[0].taskID,
+                                completed: cubit.getStudentTasksEntity!
+                                    .data[index].studentTasks[0].progress,
+                                mainTaskTitle: cubit.getStudentTasksEntity!
+                                    .data[index].mainTaskTitle,
+                                title: cubit.getStudentTasksEntity!.data[index]
+                                    .studentTasks[0].title,
+                                description: cubit.getStudentTasksEntity!
+                                    .data[index].studentTasks[0].description,
+                                daysLeft: cubit.getStudentTasksEntity!
+                                    .data[index].studentTasks[0].daysLeft,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  : Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            pngPaths.nodata,
+                            height: 40.h,
+                            width: 70.w,
+                          ),
+                          Text(
+                            "No Tasks Found !",
+                            style: TextStyle(
+                                fontSize: 20.sp, color: AppColors.grey),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                : Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          pngPaths.nodata,
-                          height: 40.h,
-                          width: 70.w,
-                        ),
-                        Text(
-                          "No Tasks Found !",
-                          style:
-                              TextStyle(fontSize: 20.sp, color: AppColors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-            fallback: (context) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        },
+              fallback: (context) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -9,9 +9,11 @@ import 'package:projectpilot/core/usecase/base_usecase.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 import 'package:projectpilot/student/presentation/layouts/notification_screen.dart';
+import 'package:projectpilot/student/presentation/layouts/supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/services/service_locators/services_locator.dart';
 import '../components/BlogWidget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -36,15 +38,20 @@ class HomeScreen extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<MainCubit, MainStates>(
-              builder: (context, state) {
-                return Text(
-                  cubit.getStudentInfoEntity != null
-                      ? "Hi ${cubit.getStudentInfoEntity!.data.name}.."
-                      : "Hi",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                );
-              },
+            BlocProvider(
+              create: (context) => sl<MainCubit>()
+                ..getBlogs(const NoParameters())
+                ..getStudentInfo(const NoParameters()),
+              child: BlocBuilder<MainCubit, MainStates>(
+                builder: (context, state) {
+                  return Text(
+                    cubit.getStudentInfoEntity != null
+                        ? "Hi ${cubit.getStudentInfoEntity!.data.name}.."
+                        : "Hi",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  );
+                },
+              ),
             ),
             Text(
               "How are U Today?",
@@ -62,7 +69,8 @@ class HomeScreen extends StatelessWidget {
                   Functions.navigatorPush(
                       context: context,
                       screenNameToNavigate: const NotificationScreen());
-                  cubit.getStudentJoinRequest(const NoParameters());
+                  InviteActionsCubit.get(context)
+                      .getStudentJoinRequest(const NoParameters());
                 },
                 icon: Icon(
                   Icons.notifications_none_rounded,
@@ -117,8 +125,7 @@ class HomeScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               child: Image.asset(
                                 imageUrl,
-                                fit:
-                                    BoxFit.cover, // Adjust the BoxFit as needed
+                                fit: BoxFit.cover,
                               ),
                             ),
                           );

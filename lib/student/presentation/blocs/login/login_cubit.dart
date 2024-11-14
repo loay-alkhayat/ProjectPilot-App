@@ -60,7 +60,6 @@ class LoginCubit extends Cubit<LoginStates> {
       CacheHelper.removeData(key: "studentToken");
       CacheHelper.removeData(key: "studentTeam");
       CacheHelper.removeData(key: "studentLeader");
-
       emit(LogoutSuccessState());
     });
   }

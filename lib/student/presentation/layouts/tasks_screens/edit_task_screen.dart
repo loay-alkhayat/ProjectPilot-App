@@ -8,6 +8,7 @@ import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/service_locators/services_locator.dart';
 import '../../../domain/parameters/tasks_params/create_task_parameters.dart';
 import '../../../domain/parameters/tasks_params/get_tasks_param.dart';
 import '../../components/show_toast.dart';
@@ -166,39 +167,43 @@ class EditTaskScreen extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                BlocConsumer<MainCubit, MainStates>(
-                  listener: (context, state) {
-                    if (state is CreateTaskSuccessState) {
-                      showToast(message: "Successfully Updated!");
-                      GetTaskParameters parameters =
-                          GetTaskParameters(page: 1, perPage: 10);
-                      MainCubit.get(context).getTasks(parameters);
-                      Navigator.pop(context);
-                    }
-                  },
-                  builder: (context, state) {
-                    return ConditionalBuilder(
-                      condition: state is! CreateTaskLoadingState,
-                      builder: (context) => widthButton(
-                          paddingSize: 0,
-                          textButton: "Edit Task",
-                          onPress: () {
-                            if (formKey.currentState!.validate()) {
-                              CreateTaskParameters parameters =
-                                  CreateTaskParameters(
-                                duration: selectedDuration,
-                                id: taskID,
-                                taskDescription: taskDescriptionController.text,
-                                taskTitle: taskTitleController.text,
-                              );
-                              MainCubit.get(context).createTask(parameters);
-                            }
-                          }),
-                      fallback: (context) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
+                BlocProvider(
+                  create: (context) => sl<MainCubit>(),
+                  child: BlocConsumer<MainCubit, MainStates>(
+                    listener: (context, state) {
+                      if (state is CreateTaskSuccessState) {
+                        showToast(message: "Successfully Updated!");
+                        GetTaskParameters parameters =
+                            GetTaskParameters(page: 1, perPage: 10);
+                        MainCubit.get(context).getTasks(parameters);
+                        Navigator.pop(context);
+                      }
+                    },
+                    builder: (context, state) {
+                      return ConditionalBuilder(
+                        condition: state is! CreateTaskLoadingState,
+                        builder: (context) => widthButton(
+                            paddingSize: 0,
+                            textButton: "Edit Task",
+                            onPress: () {
+                              if (formKey.currentState!.validate()) {
+                                CreateTaskParameters parameters =
+                                    CreateTaskParameters(
+                                  duration: selectedDuration,
+                                  id: taskID,
+                                  taskDescription:
+                                      taskDescriptionController.text,
+                                  taskTitle: taskTitleController.text,
+                                );
+                                MainCubit.get(context).createTask(parameters);
+                              }
+                            }),
+                        fallback: (context) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

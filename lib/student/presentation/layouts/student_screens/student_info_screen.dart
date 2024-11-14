@@ -5,16 +5,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectpilot/core/assets_paths/app_png_paths.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
+import 'package:projectpilot/student/presentation/layouts/supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
+import 'package:projectpilot/student/presentation/layouts/supervisors_screen/invites_actions_cubit/invites_actions_states.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/service_locators/requests_service_locator.dart';
 
 class StudentInfoScreen extends StatelessWidget {
   const StudentInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    MainCubit cubit = MainCubit.get(context);
+    InviteActionsCubit cubit = InviteActionsCubit.get(context);
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -22,18 +25,21 @@ class StudentInfoScreen extends StatelessWidget {
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppColors.white),
         backgroundColor: AppColors.primary,
-        title: BlocBuilder<MainCubit, MainStates>(
-          builder: (context, state) {
-            return Text(
-              cubit.getStudentByIdSuccess
-                  ? "${cubit.getStudentByIdEntity!.data.name} Profile"
-                  : "",
-              style: TextStyle(
-                  fontSize: 20.sp,
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w500),
-            );
-          },
+        title: BlocProvider(
+          create: (context) => sl<InviteActionsCubit>(),
+          child: BlocBuilder<InviteActionsCubit, InviteActionsState>(
+            builder: (context, state) {
+              return Text(
+                cubit.getStudentByIdSuccess
+                    ? "${cubit.getStudentByIdEntity!.data.name} Profile"
+                    : "",
+                style: TextStyle(
+                    fontSize: 20.sp,
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w500),
+              );
+            },
+          ),
         ),
       ),
       backgroundColor: AppColors.primary,

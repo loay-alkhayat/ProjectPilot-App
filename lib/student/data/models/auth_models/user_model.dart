@@ -10,9 +10,7 @@ class StudentModel extends StudentEntity {
         status: json["status"],
         message: json["message"],
         pages: json['pages'],
-        data: json['data'] != null
-            ? StudentDataModel.fromJson(json['data'])
-            : []);
+        data: StudentDataModel.fromJson(json['data']));
   }
 }
 
@@ -59,7 +57,7 @@ class StudentInfo extends Student {
       junior: json['junior'],
       teamID: json['has_team'],
       isLeader: json['is_leader'],
-      userID: ['id'] is int ? json['id'] : json['id'] == 0,
+      userID: json['id'],
     );
   }
 }

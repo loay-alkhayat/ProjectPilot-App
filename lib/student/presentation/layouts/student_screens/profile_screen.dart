@@ -15,6 +15,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../auth_screen/login_screen.dart';
+import '../supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
 import 'edit_bio_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -23,6 +24,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MainCubit cubit = MainCubit.get(context);
+    InviteActionsCubit inviteActionsCubit = InviteActionsCubit.get(context);
 
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -142,6 +144,14 @@ class ProfileScreen extends StatelessWidget {
                           iconColor: AppColors.primary,
                           txt: "LogOut",
                           onPress: () {
+                            cubit.getStudentInfoEntity = null;
+                            cubit.getStudentTasksEntity = null;
+                            inviteActionsCubit.getTeamsEntity = null;
+                            inviteActionsCubit.supervisorEntity = null;
+                            inviteActionsCubit.engineerEntity = null;
+                            inviteActionsCubit.getStudentJoinRequestEntity =
+                                null;
+                            inviteActionsCubit.getTeamJoinRequestEntity = null;
                             LoginCubit.get(context)
                                 .logout(const NoParameters());
                             Functions.navigatorPushAndRemove(

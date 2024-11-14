@@ -14,7 +14,8 @@ import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 import 'package:projectpilot/student/presentation/components/show_toast.dart';
 import 'package:projectpilot/student/presentation/components/width_button.dart';
 import 'package:projectpilot/student/presentation/layouts/student_screens/profile_screen.dart';
-import 'package:projectpilot/student/presentation/layouts/supervisors_screen.dart';
+import 'package:projectpilot/student/presentation/layouts/supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
+import 'package:projectpilot/student/presentation/layouts/supervisors_screen/supervisors_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../core/constants/app_colors.dart';
@@ -79,7 +80,7 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context, state) => Form(
         key: formKey,
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           key: scaffoldKey,
           body: PageView.builder(
             scrollBehavior: const ScrollBehavior(),
@@ -216,14 +217,35 @@ class _MainScreenState extends State<MainScreen> {
                                         Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 5.w),
-                                          child: TextButton(
-                                            onPressed: () {
-                                              showFiles();
+                                          child: BlocBuilder<MainCubit,
+                                              MainStates>(
+                                            builder: (context, state) {
+                                              return state
+                                                      is UploadProposalsLoadingState
+                                                  ? Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 2.h),
+                                                      child: Text(
+                                                        "Choose Your Pdf",
+                                                        style: TextStyle(
+                                                            fontSize: 17.sp,
+                                                            color: AppColors
+                                                                .grey1),
+                                                      ),
+                                                    )
+                                                  : TextButton(
+                                                      onPressed: () {
+                                                        showFiles();
+                                                      },
+                                                      child: Text(
+                                                        "Choose Your Pdf",
+                                                        style: TextStyle(
+                                                          fontSize: 17.sp,
+                                                        ),
+                                                      ),
+                                                    );
                                             },
-                                            child: Text(
-                                              "Choose Your Pdf",
-                                              style: TextStyle(fontSize: 17.sp),
-                                            ),
                                           ),
                                         ),
                                       ],
@@ -384,11 +406,7 @@ class _MainScreenState extends State<MainScreen> {
                                         keyboardType:
                                             TextInputType.visiblePassword,
                                         textInputAction: TextInputAction.next,
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter
-                                              .singleLineFormatter,
-                                          LengthLimitingTextInputFormatter(9),
-                                        ],
+
                                         controller: teamNameController,
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
@@ -481,10 +499,11 @@ class _MainScreenState extends State<MainScreen> {
                 curve: Curves.ease,
               );
               currentIndex = index;
-              if (currentIndex == 1 && cubit.supervisorEntity == null) {
+              if (currentIndex == 1) {
+                InviteActionsCubit.get(context).indexOfSupervisors = -1;
                 SearchSupervisorsParameters parameters =
                     SearchSupervisorsParameters(supervisorsName: "");
-                cubit.getSupervisors(parameters);
+                InviteActionsCubit.get(context).getSupervisors(parameters);
               }
               if (currentIndex == 2) {
                 cubit.indexOfTeamScreenTabBar = 0;
@@ -493,12 +512,7 @@ class _MainScreenState extends State<MainScreen> {
                 AppConstants.userTeam != 0 ? cubit.getTasks(parameters) : null;
               }
               if (currentIndex == 3 && cubit.getStudentInfoEntity == null) {
-                cubit.getStudentInfo(const NoParameters()).then((value) {
-                  AppConstants.userLeader =
-                      cubit.getStudentInfoEntity!.data.isLeader;
-                  AppConstants.userTeam =
-                      cubit.getStudentInfoEntity!.data.teamID;
-                });
+                cubit.getStudentInfo(const NoParameters());
               }
             }),
           ),
@@ -522,9 +536,6 @@ class _MainScreenState extends State<MainScreen> {
           }
 
           cubit.getStudentInfo(const NoParameters()).then((value) {
-            AppConstants.userLeader = cubit.getStudentInfoEntity!.data.isLeader;
-            AppConstants.userTeam = cubit.getStudentInfoEntity!.data.teamID;
-          }).then((value) {
             GetTaskParameters parameters =
                 GetTaskParameters(page: 1, perPage: 10);
             cubit.getTasks(parameters);

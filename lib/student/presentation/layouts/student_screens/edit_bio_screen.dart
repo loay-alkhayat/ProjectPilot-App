@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectpilot/student/domain/parameters/add_bio_parameters.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
-import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../core/services/service_locators/services_locator.dart';
 import '../../../../core/usecase/base_usecase.dart';
 import '../../components/width_button.dart';
+import 'bio_cubit/bio_cubit.dart';
+import 'bio_cubit/bio_states.dart';
 
 class EditBioScreen extends StatelessWidget {
   EditBioScreen({
@@ -79,32 +81,35 @@ class EditBioScreen extends StatelessWidget {
                   height: 2.h,
                 ),
                 const Spacer(),
-                BlocConsumer<MainCubit, MainStates>(
-                  listener: (context, state) {
-                    if (state is AddBioSuccessState) {
-                      Navigator.pop(context);
-                      MainCubit.get(context)
-                          .getStudentInfo(const NoParameters());
-                    }
-                  },
-                  builder: (context, state) {
-                    return ConditionalBuilder(
-                      condition: state is! AddBioLoadingState,
-                      builder: (context) => widthButton(
-                          paddingSize: 0,
-                          textButton: "Edit Bio",
-                          onPress: () {
-                            if (formKey.currentState!.validate()) {
-                              BioParameters parameters =
-                                  BioParameters(bio: bioController.text);
-                              MainCubit.get(context).addBio(parameters);
-                            }
-                          }),
-                      fallback: (context) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
+                BlocProvider(
+                  create: (context) => sl<BioCubit>(),
+                  child: BlocConsumer<BioCubit, BioState>(
+                    listener: (context, state) {
+                      if (state is AddBioSuccessState) {
+                        Navigator.pop(context);
+                        MainCubit.get(context)
+                            .getStudentInfo(const NoParameters());
+                      }
+                    },
+                    builder: (context, state) {
+                      return ConditionalBuilder(
+                        condition: state is! AddBioLoadingState,
+                        builder: (context) => widthButton(
+                            paddingSize: 0,
+                            textButton: "Edit Bio",
+                            onPress: () {
+                              if (formKey.currentState!.validate()) {
+                                BioParameters parameters =
+                                    BioParameters(bio: bioController.text);
+                                BioCubit.get(context).addBio(parameters);
+                              }
+                            }),
+                        fallback: (context) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

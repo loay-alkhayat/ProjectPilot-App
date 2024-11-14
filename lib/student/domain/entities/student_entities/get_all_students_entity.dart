@@ -4,7 +4,6 @@ class GetStudentsEntity extends Equatable {
   final String status;
   final int pages;
   final String message;
-
   final GetStudentsData data;
 
   const GetStudentsEntity(

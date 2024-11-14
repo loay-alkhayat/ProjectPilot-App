@@ -15,7 +15,7 @@ class ApproveTeamJoinRequestDataSourceImp
       ApproveTeamJoinRequestParameters parameters) async {
     try {
       final response = await DioServices().post(
-        url: ApiUrls.approveStudentTeamJoinRequest,
+        url: ApiUrls.acceptTeamJoinRequest,
         data: parameters.toJson(),
       );
       logger.d(response.data);

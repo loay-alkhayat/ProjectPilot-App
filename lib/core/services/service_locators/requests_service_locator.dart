@@ -14,6 +14,7 @@ import 'package:projectpilot/student/domain/usecases/invitation_usecase/approve_
 import 'package:projectpilot/student/domain/usecases/invitation_usecase/approve_team_join_request_usecase.dart';
 import 'package:projectpilot/student/domain/usecases/invitation_usecase/get_team_join_requests_usecase.dart';
 import 'package:projectpilot/student/domain/usecases/invitation_usecase/reject_team_join_request_usecase.dart';
+import 'package:projectpilot/student/presentation/layouts/supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
 
 import '../../../student/data/datasources/invitations_data_source/approve_team_join_request_data_source/approve_team_join_request_data_source.dart';
 import '../../../student/data/datasources/invitations_data_source/get_student_join_request_data_source/get_student_join_request_data_source.dart';
@@ -62,6 +63,9 @@ class RequestsServicesLocator {
       _instance ??= RequestsServicesLocator._();
 
   static void init() {
+    sl.registerFactory(() => InviteActionsCubit(sl(), sl(), sl(), sl(), sl(),
+        sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+
     /// Use Cases
 
     sl.registerLazySingleton(() => SendInviteUseCase(sl()));

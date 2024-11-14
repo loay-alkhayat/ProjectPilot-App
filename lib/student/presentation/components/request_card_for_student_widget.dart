@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:projectpilot/student/domain/parameters/get_team_by_id_param.dart';
 import 'package:projectpilot/student/domain/parameters/invitation_params/approve_student_join_request_param.dart';
 import 'package:projectpilot/student/domain/parameters/invitation_params/reject_student_join_request_param.dart';
-import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:projectpilot/student/presentation/layouts/team_screens/team_info_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/functions/functions.dart';
+import '../layouts/supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
 
 class RequestCardForStudentWidget extends StatelessWidget {
   const RequestCardForStudentWidget(
@@ -55,7 +55,7 @@ class RequestCardForStudentWidget extends StatelessWidget {
                   GetTeamByIdParameters parameters =
                       GetTeamByIdParameters(teamID: teamID);
 
-                  MainCubit.get(context).getTeamById(parameters);
+                  InviteActionsCubit.get(context).getTeamById(parameters);
                   Functions.navigatorPush(
                       context: context,
                       screenNameToNavigate: TeamInfoScreen(teamName: teamName));
@@ -73,7 +73,8 @@ class RequestCardForStudentWidget extends StatelessWidget {
             onTap: () {
               ApproveStudentJoinRequestParameters parameters =
                   ApproveStudentJoinRequestParameters(requestID: requestID);
-              MainCubit.get(context).approveStudentJoinRequest(parameters);
+              InviteActionsCubit.get(context)
+                  .approveStudentJoinRequest(parameters);
             },
             child: Icon(
               Icons.check_circle_outline,
@@ -88,7 +89,8 @@ class RequestCardForStudentWidget extends StatelessWidget {
               onTap: () {
                 RejectStudentJoinRequestParameters parameters =
                     RejectStudentJoinRequestParameters(requestID: requestID);
-                MainCubit.get(context).rejectStudentJoinRequest(parameters);
+                InviteActionsCubit.get(context)
+                    .rejectStudentJoinRequest(parameters);
               },
               child: Icon(
                 Icons.cancel_outlined,

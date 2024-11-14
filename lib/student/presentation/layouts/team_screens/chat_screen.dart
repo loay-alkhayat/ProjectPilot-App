@@ -8,20 +8,24 @@ import 'package:projectpilot/student/presentation/blocs/main_bloc/states.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../core/models/models/message_model.dart';
+import '../../../../core/services/service_locators/services_locator.dart';
+import 'chat_cubit/chat_cubit.dart';
 
 class ChatDetailsScreen extends StatelessWidget {
   ChatDetailsScreen({super.key});
   TextEditingController messageController = TextEditingController();
-  ScrollController controllerScroll = ScrollController();
   @override
   Widget build(BuildContext context) {
-    MainCubit cubit = MainCubit.get(context);
+    MessagesCubit cubit = MessagesCubit.get(context);
     return Builder(
       builder: (context) {
         cubit.getMessages();
-        return BlocConsumer<MainCubit, MainStates>(
-          builder: (context, state) {
-            return Scaffold(
+        cubit.listenToTypingStatus();
+        return BlocProvider(
+          create: (context) => sl<MainCubit>(),
+          child: BlocConsumer<MainCubit, MainStates>(
+            builder: (context, state) {
+              return Scaffold(
                 appBar: AppBar(
                   forceMaterialTransparency: true,
                   title: Row(
@@ -31,11 +35,9 @@ class ChatDetailsScreen extends StatelessWidget {
                         backgroundImage: const AssetImage(pngPaths.teamImage),
                         radius: 6.w,
                       ),
-                      SizedBox(
-                        width: 4.w,
-                      ),
+                      SizedBox(width: 4.w),
                       Text(
-                        "projectPilot",
+                        "GroupChat",
                         style: TextStyle(
                             color: AppColors.black,
                             fontWeight: FontWeight.bold,
@@ -50,42 +52,42 @@ class ChatDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ConditionalBuilder(
-                        condition: cubit.getMessagesSuccess == true,
+                        condition: cubit.getMessagesSuccess,
                         builder: (context) => Expanded(
                           child: ListView.separated(
-                              physics: const BouncingScrollPhysics(),
-                              controller: controllerScroll,
-                              itemBuilder: (context, index) {
-                                // int senderID = int.parse(MainCubit.get(context)
-                                //     .messages[index]
-                                //     .senderId!);
-                                // GetStudentByIdParameters parameters =
-                                //     GetStudentByIdParameters(
-                                //         studentID: senderID);
-                                // cubit.getStudentById(parameters);
-                                if (cubit.getStudentInfoEntity!.data.studentID
-                                        .toString() ==
-                                    cubit.messages[index].senderId) {
-                                  return myMessageBuild(
-                                      context, cubit.messages[index]);
-                                }
-                                return reciverMessageBuild(
-                                  context,
-                                  cubit.messages[index],
-                                );
-                              },
-                              separatorBuilder: (context, index) => SizedBox(
-                                    height: 3.h,
-                                  ),
-                              itemCount: cubit.messages.length),
+                            physics: const BouncingScrollPhysics(),
+                            controller: cubit.controllerScroll,
+                            itemBuilder: (context, index) {
+                              if (cubit.getStudentInfoEntity!.data.studentID
+                                      .toString() ==
+                                  cubit.messages[index].senderId) {
+                                return myMessageBuild(
+                                    context, cubit.messages[index]);
+                              }
+                              return reciverMessageBuild(
+                                  context, cubit.messages[index]);
+                            },
+                            separatorBuilder: (context, index) =>
+                                SizedBox(height: 3.h),
+                            itemCount: cubit.messages.length,
+                          ),
                         ),
                         fallback: (context) => const Center(
                           child: CircularProgressIndicator(),
                         ),
                       ),
-                      SizedBox(
-                        height: 2.h,
-                      ),
+                      if (cubit.otherUserIsTyping)
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.h),
+                          child: const Text(
+                            "Someone is typing...",
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      SizedBox(height: 2.h),
                       Container(
                         padding: EdgeInsets.only(left: 2.w),
                         clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -113,16 +115,22 @@ class ChatDetailsScreen extends StatelessWidget {
                                       color: AppColors.grey,
                                     ),
                                   ),
+                                  onChanged: (text) {
+                                    cubit.updateTypingStatus(true);
+                                  },
                                   onSubmitted: (value) async {
-                                    controllerScroll.animateTo(
-                                        duration: const Duration(seconds: 1),
-                                        curve: Curves.ease,
-                                        controllerScroll
-                                            .position.maxScrollExtent);
+                                    cubit.controllerScroll.animateTo(
+                                      duration: const Duration(seconds: 1),
+                                      curve: Curves.ease,
+                                      cubit.controllerScroll.position
+                                              .maxScrollExtent +
+                                          9.h,
+                                    );
                                     if (messageController.text.isNotEmpty) {
                                       cubit.sendMessage(
                                           text: messageController.text);
                                       messageController.clear();
+                                      cubit.updateTypingStatus(false);
                                     }
                                   },
                                 ),
@@ -131,31 +139,37 @@ class ChatDetailsScreen extends StatelessWidget {
                             Container(
                               color: AppColors.grey,
                               child: IconButton(
-                                  onPressed: () {
-                                    controllerScroll.animateTo(
-                                        duration: const Duration(seconds: 1),
-                                        curve: Curves.ease,
-                                        controllerScroll
-                                            .position.maxScrollExtent);
-                                    if (messageController.text.isNotEmpty) {
-                                      cubit.sendMessage(
-                                          text: messageController.text);
-                                    }
+                                onPressed: () {
+                                  cubit.controllerScroll.animateTo(
+                                    duration: const Duration(seconds: 1),
+                                    curve: Curves.ease,
+                                    cubit.controllerScroll.position
+                                            .maxScrollExtent +
+                                        9.h,
+                                  );
+                                  if (messageController.text.isNotEmpty) {
+                                    cubit.sendMessage(
+                                        text: messageController.text);
                                     messageController.clear();
-                                  },
-                                  icon: const Icon(
-                                    Icons.send,
-                                    color: AppColors.white,
-                                  )),
-                            )
+                                    cubit.updateTypingStatus(false);
+                                  }
+                                },
+                                icon: const Icon(
+                                  Icons.send,
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                ));
-          },
-          listener: (context, state) {},
+                ),
+              );
+            },
+            listener: (context, state) {},
+          ),
         );
       },
     );
@@ -165,20 +179,32 @@ class ChatDetailsScreen extends StatelessWidget {
 Widget reciverMessageBuild(BuildContext context, MessageModel model) {
   return Align(
     alignment: AlignmentDirectional.centerEnd,
-    child: Container(
-      padding: EdgeInsets.all(3.w),
-      decoration: BoxDecoration(
-        color: Colors.grey[400],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          model.senderName!.split(" ").first.toString(),
+          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
         ),
-      ),
-      child: Text(
-        model.text ?? '', // Make sure model.text is not null
-        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.sp),
-      ),
+        SizedBox(
+          height: 0.5.h,
+        ),
+        Container(
+          padding: EdgeInsets.all(3.w),
+          decoration: BoxDecoration(
+            color: Colors.grey[400],
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+            ),
+          ),
+          child: Text(
+            model.text ?? '', // Make sure model.text is not null
+            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.sp),
+          ),
+        ),
+      ],
     ),
   );
 }

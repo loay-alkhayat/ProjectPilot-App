@@ -22,15 +22,23 @@ class GetPostCommentsDataEntity extends Equatable {
   final String commentStudentName;
   final int commentStudentID;
   final String commentDate;
+  final String userType;
 
   const GetPostCommentsDataEntity(
       {required this.commentID,
       required this.comment,
+      required this.userType,
       required this.commentStudentName,
       required this.commentDate,
       required this.commentStudentID});
 
   @override
-  List<Object?> get props =>
-      [commentID, comment, commentStudentName, commentStudentID, commentDate];
+  List<Object?> get props => [
+        commentID,
+        comment,
+        commentStudentName,
+        userType,
+        commentStudentID,
+        commentDate
+      ];
 }

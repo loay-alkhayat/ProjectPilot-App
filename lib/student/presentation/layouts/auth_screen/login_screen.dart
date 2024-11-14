@@ -6,10 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectpilot/core/assets_paths/app_png_paths.dart';
+import 'package:projectpilot/core/usecase/base_usecase.dart';
+import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../core/functions/functions.dart';
+import '../../../../core/services/service_locators/auth_service_locator.dart';
 import '../../../domain/parameters/login_parameters.dart';
 import '../../blocs/login/login_cubit.dart';
 import '../../blocs/login/login_states.dart';
@@ -21,7 +24,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   final TextEditingController _idController =
-      TextEditingController(text: "nour@gmail.com	");
+      TextEditingController(text: "loay@loay.com");
   final TextEditingController _passwordController =
       TextEditingController(text: "201910202");
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -129,8 +132,6 @@ class LoginScreen extends StatelessWidget {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your Password';
-                              } else if (value.length != 9) {
-                                return 'Password must be 9 digits ';
                               }
                               return null;
                             },
@@ -163,41 +164,46 @@ class LoginScreen extends StatelessWidget {
                     SizedBox(
                       height: 3.h,
                     ),
-                    BlocConsumer<LoginCubit, LoginStates>(
-                      listener: (context, state) {
-                        if (state is LoginSuccessState) {
-                          // showToast(message: LoginCubit.get(context).loginModel!.message);
-                          Functions.navigatorPush(
-                              context: context,
-                              screenNameToNavigate: MainScreen());
-                        }
-                        if (state is LoginErrorState) {
-                          showToast(message: state.error);
-                        }
-                      },
-                      builder: (context, state) {
-                        return ConditionalBuilder(
-                          condition: state is! LoginLoadingState,
-                          builder: (context) => FadeInUp(
-                            duration: const Duration(milliseconds: 1000),
-                            animate: true,
-                            child: widthButton(
-                              textButton: "Login",
-                              onPress: () {
-                                if (formKey.currentState!.validate()) {
-                                  LoginParameters parameters = LoginParameters(
-                                      email: _idController.text,
-                                      password: _passwordController.text);
-                                  LoginCubit.get(context).login(parameters);
-                                }
-                              },
+                    BlocProvider(
+                      create: (context) => sl<LoginCubit>(),
+                      child: BlocConsumer<LoginCubit, LoginStates>(
+                        listener: (context, state) {
+                          if (state is LoginSuccessState) {
+                            MainCubit.get(context)
+                                .getStudentInfo(const NoParameters());
+                            // showToast(message: LoginCubit.get(context).loginModel!.message);
+                            Functions.navigatorPushAndRemove(
+                                context, MainScreen());
+                          }
+                          if (state is LoginErrorState) {
+                            showToast(message: state.error);
+                          }
+                        },
+                        builder: (context, state) {
+                          return ConditionalBuilder(
+                            condition: state is! LoginLoadingState,
+                            builder: (context) => FadeInUp(
+                              duration: const Duration(milliseconds: 1000),
+                              animate: true,
+                              child: widthButton(
+                                textButton: "Login",
+                                onPress: () {
+                                  if (formKey.currentState!.validate()) {
+                                    LoginParameters parameters =
+                                        LoginParameters(
+                                            email: _idController.text,
+                                            password: _passwordController.text);
+                                    LoginCubit.get(context).login(parameters);
+                                  }
+                                },
+                              ),
                             ),
-                          ),
-                          fallback: (context) => const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      },
+                            fallback: (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        },
+                      ),
                     )
                   ],
                 ),

@@ -35,7 +35,7 @@ class Student extends Equatable {
   final int junior;
   final int teamID;
   final bool isLeader;
-  final bool userID;
+  final int userID;
 
   Student(
       {required this.userType,

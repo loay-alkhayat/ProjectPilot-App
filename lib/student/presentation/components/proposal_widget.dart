@@ -116,7 +116,7 @@ class ProposalWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4.w),
                             onTap: () async {
                               String prefixedUrl =
-                                  'http://192.168.1.110:8000/$proposalPdf';
+                                  'https://senior.alhasanshnnar.com/public/$proposalPdf';
                               Uri uri = Uri.parse(prefixedUrl);
                               if (await canLaunchUrl(uri)) {
                                 await launchUrl(uri);

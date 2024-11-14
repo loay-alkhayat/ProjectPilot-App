@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../layouts/supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
 
 class SupervisorWidget extends StatelessWidget {
   SupervisorWidget({
@@ -71,10 +71,13 @@ class SupervisorWidget extends StatelessWidget {
           ),
           isLeader
               ? stateLoading &&
-                      index == MainCubit.get(context).indexOfSupervisors
+                      index ==
+                          InviteActionsCubit.get(context).indexOfSupervisors
                   ? const CircularProgressIndicator()
-                  : index == MainCubit.get(context).indexOfSupervisors &&
-                          MainCubit.get(context).invited
+                  : index ==
+                              InviteActionsCubit.get(context)
+                                  .indexOfSupervisors &&
+                          InviteActionsCubit.get(context).invited
                       ? Icon(
                           Icons.check_outlined,
                           color: AppColors.green,

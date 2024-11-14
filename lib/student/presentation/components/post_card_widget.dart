@@ -281,8 +281,15 @@ class _PostCardWidgetState extends State<PostCardWidget> {
                                             radius: 4.w,
                                             backgroundColor:
                                                 AppColors.lightGrey,
-                                            backgroundImage: const AssetImage(
-                                                pngPaths.studentProfile),
+                                            backgroundImage: AssetImage(
+                                              MainCubit.get(context)
+                                                          .getPostCommentsEntity!
+                                                          .comments[index]
+                                                          .userType ==
+                                                      "student"
+                                                  ? pngPaths.studentProfile
+                                                  : pngPaths.professorImage,
+                                            ),
                                           ),
                                           SizedBox(width: 2.w),
                                           Expanded(

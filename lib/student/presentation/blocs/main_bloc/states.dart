@@ -22,39 +22,6 @@ class GetBlogsErrorState extends MainStates {
   const GetBlogsErrorState(this.error);
 }
 
-///SuperVisors States
-class GetSupervisorsLoadingState extends MainStates {}
-
-class GetSupervisorsSuccessState extends MainStates {}
-
-class GetSupervisorsErrorState extends MainStates {
-  final String error;
-
-  const GetSupervisorsErrorState(this.error);
-}
-
-///Engineers States
-class GetEngineersLoadingState extends MainStates {}
-
-class GetEngineersSuccessState extends MainStates {}
-
-class GetEngineersErrorState extends MainStates {
-  final String error;
-
-  const GetEngineersErrorState(this.error);
-}
-
-///GetStudents States
-class GetStudentsLoadingState extends MainStates {}
-
-class GetStudentsSuccessState extends MainStates {}
-
-class GetStudentsErrorState extends MainStates {
-  final String error;
-
-  const GetStudentsErrorState(this.error);
-}
-
 ///GetProposals States
 class GetProposalsLoadingState extends MainStates {}
 
@@ -78,17 +45,6 @@ class UploadProposalsErrorState extends MainStates {
 }
 
 /////GetTeams States
-class GetTeamsLoadingState extends MainStates {}
-
-class GetTeamsSuccessState extends MainStates {}
-
-class GetTeamsErrorState extends MainStates {
-  final String error;
-
-  const GetTeamsErrorState(this.error);
-}
-
-/////GetTeams States
 class GetTeamMembersLoadingState extends MainStates {}
 
 class GetTeamMembersSuccessState extends MainStates {}
@@ -97,94 +53,6 @@ class GetTeamMembersErrorState extends MainStates {
   final String error;
 
   const GetTeamMembersErrorState(this.error);
-}
-
-/////GetTeamsJoinRequests States
-class GetTeamJoinRequestsLoadingState extends MainStates {}
-
-class GetTeamJoinRequestsSuccessState extends MainStates {}
-
-class GetTeamJoinRequestsErrorState extends MainStates {
-  final String error;
-
-  const GetTeamJoinRequestsErrorState(this.error);
-}
-
-/////GetStudentJoinRequests States
-class GetStudentJoinRequestsLoadingState extends MainStates {}
-
-class GetStudentJoinRequestsSuccessState extends MainStates {}
-
-class GetStudentJoinRequestsErrorState extends MainStates {
-  final String error;
-
-  const GetStudentJoinRequestsErrorState(this.error);
-}
-
-/////RejectTeamJoinRequests States
-class RejectTeamJoinRequestLoadingState extends MainStates {}
-
-class RejectTeamJoinRequestSuccessState extends MainStates {}
-
-class RejectTeamJoinRequestErrorState extends MainStates {
-  final String error;
-
-  const RejectTeamJoinRequestErrorState(this.error);
-}
-
-/////RejectStudentJoinRequests States
-class RejectStudentJoinRequestLoadingState extends MainStates {}
-
-class RejectStudentJoinRequestSuccessState extends MainStates {}
-
-class RejectStudentJoinRequestErrorState extends MainStates {
-  final String error;
-
-  const RejectStudentJoinRequestErrorState(this.error);
-}
-
-/////ApproveTeamJoinRequests States
-class ApproveTeamJoinRequestLoadingState extends MainStates {}
-
-class ApproveTeamJoinRequestSuccessState extends MainStates {}
-
-class ApproveTeamJoinRequestErrorState extends MainStates {
-  final String error;
-
-  const ApproveTeamJoinRequestErrorState(this.error);
-}
-
-/////ApproveStudentJoinRequests States
-class ApproveStudentJoinRequestLoadingState extends MainStates {}
-
-class ApproveStudentJoinRequestSuccessState extends MainStates {}
-
-class ApproveStudentJoinRequestErrorState extends MainStates {
-  final String error;
-
-  const ApproveStudentJoinRequestErrorState(this.error);
-}
-
-/////GetTeamsByID States
-class GetTeamByIdLoadingState extends MainStates {}
-
-class GetTeamByIdSuccessState extends MainStates {}
-
-class GetTeamByIdErrorState extends MainStates {
-  final String error;
-
-  const GetTeamByIdErrorState(this.error);
-}
-
-/////GetStudentByID States
-class GetStudentByIdLoadingState extends MainStates {}
-
-class GetStudentByIdSuccessState extends MainStates {}
-
-class GetStudentByIdErrorState extends MainStates {
-  final String error;
-
-  const GetStudentByIdErrorState(this.error);
 }
 
 /////GetStudentInfo States
@@ -363,50 +231,6 @@ class GetPostCommentsErrorState extends MainStates {
   const GetPostCommentsErrorState(this.error);
 }
 
-///Sendinvite States
-class SendInviteLoadingState extends MainStates {}
-
-class SendInviteSuccessState extends MainStates {}
-
-class SendInviteErrorState extends MainStates {
-  final String error;
-
-  const SendInviteErrorState(this.error);
-}
-
-///Sendinvite To Supervisor States
-class SendInviteToSupervisorLoadingState extends MainStates {}
-
-class SendInviteToSupervisorSuccessState extends MainStates {}
-
-class SendInviteToSupervisorErrorState extends MainStates {
-  final String error;
-
-  const SendInviteToSupervisorErrorState(this.error);
-}
-
-///Sendinvite To Supervisor States
-class SendInviteToEngineerLoadingState extends MainStates {}
-
-class SendInviteToEngineerSuccessState extends MainStates {}
-
-class SendInviteToEngineerErrorState extends MainStates {
-  final String error;
-
-  const SendInviteToEngineerErrorState(this.error);
-}
-
-///Sendinvite States
-class SendJoinRequestLoadingState extends MainStates {}
-
-class SendJoinRequestSuccessState extends MainStates {}
-
-class SendJoinRequestErrorState extends MainStates {
-  final String error;
-
-  const SendJoinRequestErrorState(this.error);
-}
-
 ///AddBio States
 class AddBioLoadingState extends MainStates {}
 
@@ -433,6 +257,8 @@ class SendMessageErrorState extends MainStates {
 class GetMessagesLoadingState extends MainStates {}
 
 class GetMessagesSuccessState extends MainStates {}
+
+class GetAllMessagesSuccessState extends MainStates {}
 
 class GetMessagesErrorState extends MainStates {
   final String error;

@@ -25,6 +25,7 @@ class GetPostCommentsDataModel extends GetPostCommentsDataEntity {
       {required super.commentID,
       required super.comment,
       required super.commentStudentName,
+      required super.userType,
       required super.commentDate,
       required super.commentStudentID});
 
@@ -34,6 +35,7 @@ class GetPostCommentsDataModel extends GetPostCommentsDataEntity {
       comment: json['comment'],
       commentDate: json['created_at'],
       commentStudentID: json['user_id'],
+      userType: json['user_type'],
       commentStudentName: json['user_name'],
     );
   }

@@ -29,6 +29,7 @@ import 'package:projectpilot/student/domain/usecases/student_usecases/add_bio_us
 import 'package:projectpilot/student/domain/usecases/supervisors_usecases/get_engineer_usecase.dart';
 import 'package:projectpilot/student/domain/usecases/supervisors_usecases/get_supervisors_usecase.dart';
 import 'package:projectpilot/student/presentation/blocs/main_bloc/cubit.dart';
+import 'package:projectpilot/student/presentation/layouts/student_screens/bio_cubit/bio_cubit.dart';
 
 import '../../../student/data/datasources/get_supervisors_data_source/get_supervisors_data_source.dart';
 import '../../../student/data/repositories/get_engineer_repository_imp.dart';
@@ -54,45 +55,30 @@ class ServicesLocator {
     StudentServicesLocator.init();
 
     /// Bloc
-
+    sl.registerFactory(() => BioCubit(sl()));
     sl.registerFactory(() => MainCubit(
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl()));
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+        ));
 
     /// Use Cases
     sl.registerLazySingleton(() => SupervisorsUseCase(sl()));

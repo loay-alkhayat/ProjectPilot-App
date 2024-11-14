@@ -3,7 +3,7 @@ import 'package:projectpilot/core/assets_paths/app_png_paths.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../blocs/main_bloc/cubit.dart';
+import '../layouts/supervisors_screen/invites_actions_cubit/invites_actions_cubit.dart';
 
 class SupervisorsWidget extends StatelessWidget {
   bool isLeader;
@@ -64,10 +64,13 @@ class SupervisorsWidget extends StatelessWidget {
           ),
           isLeader
               ? stateLoading &&
-                      index == MainCubit.get(context).indexOfSupervisors
+                      index ==
+                          InviteActionsCubit.get(context).indexOfSupervisors
                   ? CircularProgressIndicator()
-                  : index == MainCubit.get(context).indexOfSupervisors &&
-                          MainCubit.get(context).invited
+                  : index ==
+                              InviteActionsCubit.get(context)
+                                  .indexOfSupervisors &&
+                          InviteActionsCubit.get(context).invited
                       ? Icon(
                           Icons.check_outlined,
                           color: AppColors.green,

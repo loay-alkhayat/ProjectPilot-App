@@ -1,8 +1,8 @@
 class ApiUrls {
   // TODO : CHANGE BASE URL TO YOUR BASE URL HERE
-  static const String baseUrl = 'http://192.168.1.110:8000/api';
+  // static const String baseUrl = 'http://192.168.1.110:8000/api';
 
-  // static const String baseUrl = 'http://192.168.1.4:8000/api';
+  static const String baseUrl = 'https://senior.alhasanshnnar.com/api';
 
   // TODO : ADD YOUR APIS ENDPOINTS HERE
   static const String addBio = '$baseUrl/addBio';
@@ -51,5 +51,5 @@ class ApiUrls {
   static const String getStudentTeamJoinRequest = '$baseUrl/invitations';
   static const String uploadProposal = '$baseUrl/proposalRequest';
   static const String getTeamJoinRequest = '$baseUrl/joinRequests';
-  static const String acceptTeamJoinRequest = '$baseUrl/approve/joinRequests';
+  static const String acceptTeamJoinRequest = '$baseUrl/approve/joinRequest';
 }
